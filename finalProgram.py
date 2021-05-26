@@ -1,12 +1,9 @@
 import cv2
 import mediapipe as mp
-import math
 import time
 import pandas
 import numpy as np
-import statistics
 from sklearn.ensemble import RandomForestClassifier
-from scipy.spatial import distance
 from ProcessFrame import ProcessFrame
 
 # This program uses the movement classifier and the emotion classifier
@@ -22,7 +19,7 @@ mp_pose = mp.solutions.pose
 processFrame = ProcessFrame()
 getAttributes = ProcessFrame.predictAtributesInFrame
 
-img = np.zeros((500,650,3), np.uint8)
+img = np.zeros((500,800,3), np.uint8)
 # exit frame is a list of 25 frames classified with 7 
 # as no pose was detected in the frame
 exit_frame = [7]*25
@@ -202,6 +199,7 @@ def sunset():
 
 def happening(mood):
   def happy():
+    # shows screen fading from white->yellow->white
     for x in range (0,255):
       img[:]=(255-x,255,255)
       cv2.imshow('test',img)
@@ -214,6 +212,7 @@ def happening(mood):
         break
 
   def sad():
+    # shows screen fading from white->grey->white
     for x in range (0,200):
       img[:]=(255-x)
       cv2.imshow('test',img)
@@ -228,6 +227,7 @@ def happening(mood):
         break
 
   def angry():
+    # shows screen flashing black and white 
     for x in range (100):
       img[:]= (0,0,0)
       cv2.imshow('test',img)
@@ -248,7 +248,7 @@ def happening(mood):
   else:
     angry()
 
-def start():
+def startProgram():
   wait_for_dancer()
   while True:
     class_list = classify_frame()
@@ -263,7 +263,5 @@ def start():
   # sunset is the final happening that ends the program
   sunset()
 
-start()
+startProgram()
 cv2.destroyAllWindows()
-
-  
