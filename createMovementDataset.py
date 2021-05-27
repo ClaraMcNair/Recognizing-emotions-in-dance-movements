@@ -16,8 +16,8 @@ from ProcessFrame import ProcessFrame
 # Define target label and path to folder with video-files 
 csvDataFile = '_.csv'
 csvTargetFile = '_.csv'
-targetLabel = 'i'
-folderName = 'hop'
+targetLabel = '_'
+folderName = '_'
 
 processFrame = ProcessFrame()
 getAttributes = ProcessFrame.predictAtributesInFrame

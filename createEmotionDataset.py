@@ -1,22 +1,17 @@
 import cv2
 import mediapipe as mp
-import math
-import time
 import pandas
-import numpy as np
 import csv
-import time
 from sklearn.ensemble import RandomForestClassifier
-from scipy.spatial import distance
 from ProcessFrame import ProcessFrame
 
+# This program uses the movement classifier
+# and predicts what movement is detected in each frame from the webcam-input 
+# a series of 25 classified movement gets added to a given data-file 
+# and an assigned class label gets added to a given target-file
 
-processFrame = ProcessFrame()
-getAttributes = ProcessFrame.predictAtributesInFrame
-
-mp_drawing = mp.solutions.drawing_utils
-mp_pose = mp.solutions.pose
-#final_result = "none"
+# Elements from MediaPipe's solution to predict landmarks are used in this file 
+# copied from: https://google.github.io/mediapipe/solutions/pose
 
 # Define names of data and target files in csv-format
 # Define target label  
@@ -24,22 +19,13 @@ csvDataFile = 'test1.csv'
 csvTargetFile = 'test2.csv'
 class_label = '2'
 
-#videoName = 'dans5.mov'
-# video har 30 fps 
-# vi vil kun have 10 fps 
-# ergo læs kun hver tredje frame 
+processFrame = ProcessFrame()
+getAttributes = ProcessFrame.predictAtributesInFrame
 
-# lige nu bliver der 49 klasser pr liste har jeg talt det til
+mp_drawing = mp.solutions.drawing_utils
+mp_pose = mp.solutions.pose
 
-# This program creates a random forest classifier
-# and predicts what pose is detected from webcam- or a video-file input 
-# It needs a data set and a target set
-
-# DATA-SET: a csv-file with a number of instaces 
-# the csv-file will be loaded using Pandas, 
-# here we will need to specify names for all the attributes
-
-# Load data and target csv-files for the movement classifier
+# Load data and target csv-files for the movement classifier and create the classifier
 data_filename = 'movement_data.csv'
 attribute_names = ['speed','aceleration','x_dir','y_dir','feet_hip_dist',
                     'hands_shoulder_dist','rHand_lHand_dist','rFoot_lFoot_dist',
@@ -67,7 +53,9 @@ def predict_pose(test_data):
 
 
 def predict_25_frames():
-
+    
+    # class_list is used to store the predicted movements
+    # runs counts every frame 
     class_list = []
     runs = 0
     cap = cv2.VideoCapture(0)
@@ -76,6 +64,8 @@ def predict_25_frames():
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5) as pose:
 
+        # read 75 frames, since only every thrid frame is processed, 
+        # it will add up to 25 processed frames
         while cap.isOpened() and runs <= 75:
             success, image = cap.read()
             if not success:
@@ -104,7 +94,7 @@ def predict_25_frames():
                 
                 # Finally show resulting frame
                 cv2.imshow('MediaPipe Pose', image)
-                # Ignore first two crocessed frames
+                # Ignore first two processed frames
                 if (runs>1):
                     class_list.append(final_result)
 
@@ -117,21 +107,21 @@ def predict_25_frames():
         return class_list
 
 def load_list_to_dataset(class_list):
+    # Add the list to the given CSV-data-file 
     with open (csvDataFile, 'a') as file_obj:
         writer = csv.writer(file_obj)
         writer.writerow(class_list)
+    # Add class label to the given CSV-target-file
     with open (csvTargetFile, 'a') as file_obj:
         writer = csv.writer(file_obj)
-        writer.writerow(class_label)
-    
+        writer.writerow(class_label)    
 
-def Start():
+def createEmotionDataset():
     while (True):
-        class_list = predict_25_frames()
+        class_list = predict_25_frames()        
         if (len(class_list) != 25):
             break
         load_list_to_dataset(class_list)
-        
-        
-Start()
+               
+createEmotionDataset()
 cv2.destroyAllWindows
