@@ -20,13 +20,16 @@ processFrame = ProcessFrame()
 getAttributes = ProcessFrame.predictAtributesInFrame
 
 img = np.zeros((500,800,3), np.uint8)
+
 # exit frame is a list of 25 frames classified with 7 
 # as no pose was detected in the frame
 exit_frame = [7]*25
 
 # Load data and target csv-files for the movement classifier and create the classifier
 movement_data_filename = 'movement_data.csv'
-movement_attributes = ['speed','aceleration','openness','x','y','a','b','c','d','e','f','g']
+movement_attributes = ['speed','aceleration','x_dir','y_dir','feet_hip_dist',
+                        'hands_shoulder_dist','rHand_lHand_dist','rFoot_lFoot_dist',
+                        'hand_speed','feet_speed','hand_acc','feet_acc']
 movement_data = pandas.read_csv(movement_data_filename, names=movement_attributes)
 
 movement_target_filename = 'movement_target.csv'
