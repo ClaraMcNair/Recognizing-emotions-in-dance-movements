@@ -33,7 +33,7 @@ movement_target_filename = 'movement_target.csv'
 movement_labels = ['class']
 movement_target = pandas.read_csv(movement_target_filename, names=movement_labels)
 
-movement_classifier = RandomForestClassifier()
+movement_classifier = RandomForestClassifier(random_state=0)
 movement_classifier.fit(movement_data,movement_target)
 
 # Load data and target csv-files for the emotion classifier and create the classifier
@@ -45,7 +45,7 @@ emotion_target_filename = 'emotion_target.csv'
 emotion_labels = ['class']
 emotion_target = pandas.read_csv(emotion_target_filename, names=emotion_labels)
 
-emotion_classifier = RandomForestClassifier()
+emotion_classifier = RandomForestClassifier(random_state=0)
 emotion_classifier.fit(emotion_data,emotion_target)
 
 def predict_pose(test_data):
@@ -61,6 +61,7 @@ def predict_pose(test_data):
   return pose_name
 
 def classify_frame():
+  print("Classifying 25 frames:")
   # class_list is used to store the predicted movements
   # runs counts every frame 
   class_list =[]
@@ -95,6 +96,7 @@ def classify_frame():
         
         # predict pose and write result on video
         final_result = predict_pose(test_data) 
+        print("Frame no. " + str(runs) + " was classified as: " + str(final_result))
         #font = cv2.FONT_HERSHEY_SIMPLEX  
         #cv2.putText(image, final_result,(20,70),font,2,(0,0,255),2,cv2.LINE_AA)
         class_list.append(final_result)
@@ -102,7 +104,7 @@ def classify_frame():
         # Finally show resulting frame
         #cv2.imshow('MediaPipe Pose', image)
         img[:]=[255,255,255]
-        cv2.imshow('test', img)
+        cv2.imshow('Scene', img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
       runs = runs + 1
@@ -112,10 +114,12 @@ def classify_frame():
 
 def classify_list(class_list):
   predicted_mood = emotion_classifier.predict([class_list])
+  print("predicted mood: " + str(predicted_mood))
   return predicted_mood
 
 def wait_for_dancer():
   # This function shows a white screen while waiting for a pose to get detected 
+  print("Waiting for dance")
   img[:]=(255,255,255)
   cap = cv2.VideoCapture(0)
 
@@ -141,34 +145,36 @@ def wait_for_dancer():
         break
       
       else:
-        cv2.imshow('test',img) 
+        cv2.imshow('Scene',img) 
       if cv2.waitKey(1) & 0xFF == ord('q'):
             break 
-    
+    print("Dancer has antered the stage")
     # Happening when pose has been detected 
     # screen changes from white->pink->white
     for x in range (255,0,-5):
       img[:]=(255,x,255)
-      cv2.imshow('test',img)
+      cv2.imshow('Scene',img)
       if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     for x in range (0,255,5):
       img[:]=(255,x,255)
-      cv2.imshow('test',img)
+      cv2.imshow('Scene',img)
       if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
 def sunset():
+  print("Showing sunset happening before exiting program")
   # this function creates a screen 
   # with changing colors and shapes, simulating a sunset
   o = 0
   b = 255
   c = -100
+  circleCenter_x = 400
   def cool2(e,b,c):
       img[0:260,0:800]=(b,0,e)
       for x in range(260,500):
           img[x,0:800]=(255-x,0,e)
-      cv2.circle(img, (400,c),100,(0,0,255),-1)
+      cv2.circle(img, (circleCenter_x,c),100,(0,0,255),-1)
   def cool3(e,c):
       u = 250
       img[0:e,0:800]=(250,0,255)
@@ -176,11 +182,11 @@ def sunset():
           img[x,0:800]=(u,0,255)
           u = u-1
       img[e+250:500,0:800]=(0,0,255)
-      cv2.circle(img, (400,c),100,(0,0,255),-1)
+      cv2.circle(img, (circleCenter_x,c),100,(0,0,255),-1)
   
   while(o<255):
       cool2(o,b,c)
-      cv2.imshow('test', img)
+      cv2.imshow('Scene', img)
       o=o+1
       c = c+1
       if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -189,53 +195,54 @@ def sunset():
   l=245
   while l !=-250:
       cool3(l,c)
-      cv2.imshow('test', img)
+      cv2.imshow('Scene', img)
       l = l-1
       c = c+1
       if cv2.waitKey(1) & 0xFF == ord('q'):
           break
 
-
-
 def happening(mood):
   def happy():
+    print("Showing happy happening")
     # shows screen fading from white->yellow->white
     for x in range (0,255):
       img[:]=(255-x,255,255)
-      cv2.imshow('test',img)
+      cv2.imshow('Scene',img)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     for x in range (0,255):
       img[:]=(0+x,255,255)
-      cv2.imshow('test',img)
+      cv2.imshow('Scene',img)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
   def sad():
+    print("Showing sad happening")
     # shows screen fading from white->grey->white
     for x in range (0,200):
       img[:]=(255-x)
-      cv2.imshow('test',img)
+      cv2.imshow('Scene',img)
       time.sleep(0.01)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     time.sleep(0.5)
     for x in range (0,200):
       img[:]=(55+x)
-      cv2.imshow('test',img)
+      cv2.imshow('Scene',img)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
   def angry():
+    print("Showing angry happening")
     # shows screen flashing black and white 
     for x in range (100):
       img[:]= (0,0,0)
-      cv2.imshow('test',img)
+      cv2.imshow('Scene',img)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
       time.sleep(0.05)
       img[:]= (255,255,255)
-      cv2.imshow('test',img)
+      cv2.imshow('Scene',img)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
   
@@ -252,16 +259,17 @@ def startProgram():
   wait_for_dancer()
   while True:
     class_list = classify_frame()
-    print(class_list)
     if (len(class_list) != 25):
       break
     # if no pose has been detected for 25 frames, the program will end
     if (class_list == exit_frame):
+      print("Dancer has left the stage")
       break   
     mood = classify_list(class_list)
     happening(mood)
   # sunset is the final happening that ends the program
   sunset()
+  print("Exiting program")
 
 startProgram()
 cv2.destroyAllWindows()
