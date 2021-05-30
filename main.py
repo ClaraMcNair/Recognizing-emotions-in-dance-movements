@@ -21,6 +21,9 @@ getAttributes = ProcessFrame.predictAtributesInFrame
 
 img = np.zeros((500,800,3), np.uint8)
 
+# 0 for a built-in webcam, try 1 or 2 for external webcam
+webcamSource = 0
+
 # exit frame is a list of 25 frames classified with 7 
 # as no pose was detected in the frame
 exit_frame = [7]*25
@@ -69,7 +72,7 @@ def classify_frame():
   # runs counts every frame 
   class_list =[]
   runs = 0
-  cap = cv2.VideoCapture(0)
+  cap = cv2.VideoCapture(webcamSource)
 
   with mp_pose.Pose(
       min_detection_confidence=0.5,
@@ -100,12 +103,9 @@ def classify_frame():
         # predict pose and write result on video
         final_result = predict_pose(test_data) 
         print("Frame no. " + str(runs) + " was classified as: " + str(final_result))
-        #font = cv2.FONT_HERSHEY_SIMPLEX  
-        #cv2.putText(image, final_result,(20,70),font,2,(0,0,255),2,cv2.LINE_AA)
         class_list.append(final_result)
         
-        # Finally show resulting frame
-        #cv2.imshow('MediaPipe Pose', image)
+        # Show white screen while processing frame
         img[:]=[255,255,255]
         cv2.imshow('Scene', img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -124,7 +124,7 @@ def wait_for_dancer():
   # This function shows a white screen while waiting for a pose to get detected 
   print("Waiting for dance")
   img[:]=(255,255,255)
-  cap = cv2.VideoCapture(0)
+  cap = cv2.VideoCapture(webcamSource)
 
   with mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5) as pose:
     while cap.isOpened():
@@ -169,38 +169,42 @@ def sunset():
   print("Showing sunset happening before exiting program")
   # this function creates a screen 
   # with changing colors and shapes, simulating a sunset
-  o = 0
-  b = 255
-  c = -100
-  circleCenter_x = 400
-  def cool2(e,b,c):
-      img[0:260,0:800]=(b,0,e)
-      for x in range(260,500):
-          img[x,0:800]=(255-x,0,e)
-      cv2.circle(img, (circleCenter_x,c),100,(0,0,255),-1)
-  def cool3(e,c):
-      u = 250
-      img[0:e,0:800]=(250,0,255)
-      for x in range(e,e+255):
-          img[x,0:800]=(u,0,255)
-          u = u-1
-      img[e+250:500,0:800]=(0,0,255)
-      cv2.circle(img, (circleCenter_x,c),100,(0,0,255),-1)
+  red = 0
+  blue = 255
+  sunCenter_y = -100
+  sunCenter_x = 400
   
-  while(o<255):
-      cool2(o,b,c)
+  def blueToPink(red,blue,sunCenter_y):
+      img[0:260]=(blue,0,red)
+      for x in range(260,500):
+          img[x]=(255-x,0,red)
+      # add red circle as sun
+      cv2.circle(img, (sunCenter_x,sunCenter_y),100,(0,0,255),-1)
+  
+  def pinkToRed(horizonHeight,sunCenter_y):
+      blue = 250
+      img[0:horizonHeight]=(250,0,255)
+      for x in range(horizonHeight,horizonHeight+255):
+          img[x]=(blue,0,255)
+          blue = blue-1
+      img[horizonHeight+250:500]=(0,0,255)
+      # add red circle as sun
+      cv2.circle(img, (sunCenter_x,sunCenter_y),100,(0,0,255),-1)
+  
+  while(red<255):
+      blueToPink(red,blue,sunCenter_y)
       cv2.imshow('Scene', img)
-      o=o+1
-      c = c+1
+      red=red+1
+      sunCenter_y = sunCenter_y+1
       if cv2.waitKey(1) & 0xFF == ord('q'):
           break  
   
-  l=245
-  while l !=-250:
-      cool3(l,c)
+  horizonHeight=245
+  while horizonHeight != -250:
+      pinkToRed(horizonHeight,sunCenter_y)
       cv2.imshow('Scene', img)
-      l = l-1
-      c = c+1
+      horizonHeight = horizonHeight-1
+      sunCenter_y = sunCenter_y+1
       if cv2.waitKey(1) & 0xFF == ord('q'):
           break
 
@@ -208,13 +212,13 @@ def happening(mood):
   def happy():
     print("Showing happy happening")
     # shows screen fading from white->yellow->white
-    for x in range (0,255):
-      img[:]=(255-x,255,255)
+    for blue in range (255,0,-1):
+      img[:]=(blue,255,255)
       cv2.imshow('Scene',img)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-    for x in range (0,255):
-      img[:]=(0+x,255,255)
+    for blue in range (0,255):
+      img[:]=(blue,255,255)
       cv2.imshow('Scene',img)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
@@ -237,23 +241,24 @@ def happening(mood):
 
   def angry():
     print("Showing angry happening")
-    # shows screen flashing black and white 
+    # shows screen flashing black and white 100 times
     for x in range (100):
+      # black image
       img[:]= (0,0,0)
       cv2.imshow('Scene',img)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
       time.sleep(0.05)
+      # white image
       img[:]= (255,255,255)
       cv2.imshow('Scene',img)
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
   
-  moods = [1,2,3]
-  THEmood = moods[mood[0]]
-  if THEmood == 1:
+  currentMood = mood[0]
+  if currentMood == 0:
     happy()
-  elif THEmood == 2:
+  elif currentMood == 1:
     sad()
   else:
     angry()
