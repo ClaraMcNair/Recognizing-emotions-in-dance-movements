@@ -20,7 +20,7 @@ processFrame = ProcessFrame()
 getAttributes = ProcessFrame.predictAtributesInFrame
 
 # test-video
-testVideo = 'test200.mov'
+testVideo = 'testVideo.mov'
 cap = cv2.VideoCapture(testVideo)
 frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
 
