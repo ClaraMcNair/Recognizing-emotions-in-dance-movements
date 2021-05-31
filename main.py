@@ -66,7 +66,7 @@ def predict_pose(test_data):
     pose_name = all_poses[(predicted_pose[0])]
   return pose_name
 
-def classify_frame():
+def classify_25_frames():
   print("Classifying 25 frames:")
   # class_list is used to store the predicted movements
   # runs counts every frame 
@@ -266,7 +266,7 @@ def happening(mood):
 def startProgram():
   wait_for_dancer()
   while True:
-    class_list = classify_frame()
+    class_list = classify_25_frames()
     if (len(class_list) != 25):
       break
     # if no pose has been detected for 25 frames, the program will end
