@@ -3,7 +3,12 @@ import pandas
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix
+import numpy as np
 
+
+from sklearn.metrics import plot_confusion_matrix
+import matplotlib.pyplot as plt   
 
 # Load data and target csv-files for the movement classifier 
 movement_data_filename  = 'movement_data.csv'
@@ -71,7 +76,7 @@ emotion_50_classifier.fit(emotion_50_data_train, emotion_50_target_train)
 emotion_50_KNN.fit(emotion_50_data_train, emotion_50_target_train)
 
 
-#Showing the models accuracy(in percent) using built-in-function 'score'
+#printing the models accuracy(in percent) using built-in-function 'score'
 # The test-sets are given as arguments. The predicted class of the test-set is compared to the actual class from the targetfile. 
 print('Accuracy for Movement classifier using Random Forest: ', movement_classifier.score(movement_data_test, movement_target_test))
 print('Accuracy for Movement classifier using KNN: ', movement_KNN.score(movement_data_test, movement_target_test))
@@ -81,3 +86,17 @@ print('Accuracy for Emotion classifier with 25 frames using KNN: ', emotion_KNN.
 
 print('Accuracy for Emotion classifier with 50 frames using Random Forest: ', emotion_50_classifier.score(emotion_50_data_test,emotion_50_target_test))
 print('Accuracy for Emotion classifier with 50 frames using KNN: ', emotion_50_KNN.score(emotion_50_data_test,emotion_50_target_test))
+
+
+# showing confusion matrices for movement classifier and emotion classifier in separate windows. The test-sets are given as arguments. 
+plot_confusion_matrix(movement_classifier, movement_data_test, movement_target_test, cmap=plt.cm.Blues)  
+plt.show() 
+
+plot_confusion_matrix(emotion_classifier, emotion_25_data_test, emotion_25_target_test, cmap=plt.cm.Blues)  
+plt.show()
+
+#showing graph of the feature importances for movement classifier in separate window
+feature_names = np.array(['A1','A2','A3','A4','A5','A6','A7','A8','A9','A10','A11','A12'])
+importance = movement_classifier.feature_importances_
+plt.bar(feature_names, importance)
+plt.show()
