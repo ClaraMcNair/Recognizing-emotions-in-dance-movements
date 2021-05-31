@@ -28,7 +28,7 @@ In order for this program to run, the user must have a working webcam. If you ha
 
 Step 1: Clone this repository
 
-Step 2: Set up the webcam so that the user can stand 3-4 meters from the webcam, so that the whole body is in view in the camera frame. The user must remain within 3-4 meters from the webcam.
+Step 2: Set up the webcam so that the user can stand 3-4 meters from the webcam, so that the whole body is in view of the camera. The user must remain within 3-4 meters from the webcam.
 
 Step 3: Run the program på running the file :  `main.py`
 
