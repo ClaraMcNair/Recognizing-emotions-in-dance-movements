@@ -36,3 +36,5 @@ Step 4: Have the user step into the frame. When the screen flashes pink, the use
 
 Step 5: Dance!
 
+To exit the program: Press 'Q' or leave the frame.
+
