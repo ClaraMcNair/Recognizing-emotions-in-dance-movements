@@ -32,7 +32,7 @@ Step 2: Set up the webcam so that the user can stand 3-4 meters from the webcam,
 
 Step 3: Run the program på running the file :  `main.py`
 
-Step 4: Have the user step into the frame. When the screen flashes pink, the users pose has been detected.
+Step 4: Have the user step into the frame. When the screen flashes pink, the user's pose has been detected.
 
 Step 5: Dance!
 
