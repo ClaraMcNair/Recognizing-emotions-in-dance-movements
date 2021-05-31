@@ -1,8 +1,5 @@
-import mediapipe as mp
 import statistics
 from scipy.spatial import distance
-#mp_drawing = mp.solutions.drawing_utils
-#mp_pose = mp.solutions.pose
 
 class ProcessFrame:
     # Initialize class variables 

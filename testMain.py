@@ -102,8 +102,7 @@ def classify_25_frames(startingPoint):
         mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
         
         # predict pose and write result on video
-        final_result = predict_pose(test_data) 
-        #font = cv2.FONT_HERSHEY_SIMPLEX  
+        final_result = predict_pose(test_data)   
         cv2.putText(image, 'classified movement: '+ str(final_result),(20,70),font,2,(0,0,255),2,cv2.LINE_AA)
         class_list.append(final_result)
         
@@ -174,7 +173,6 @@ def wait_for_dancer():
     return frameCount
 
 def sunset():
-  print("Showing sunset happening before exiting program")
   # this function creates a screen 
   # with changing colors and shapes, simulating a sunset
   red = 0
@@ -278,7 +276,6 @@ def startProgram():
   startingPoint = wait_for_dancer()
   while True:
     class_list, startingPoint = classify_25_frames(startingPoint)
-    print(class_list)
     if (len(class_list) != 25):
       break
     # if no pose has been detected for 25 frames, the program will end
