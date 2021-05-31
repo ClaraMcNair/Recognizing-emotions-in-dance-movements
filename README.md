@@ -22,6 +22,8 @@ scikit-learn
 
 scipy
 
+matplotlib
+
 ### User-guide ###
  
 The program can only be used by one person at a time.
