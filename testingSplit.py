@@ -3,7 +3,6 @@ import pandas
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import confusion_matrix
 import numpy as np
 
 
