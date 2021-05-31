@@ -14,7 +14,7 @@ mediapipe
 
 opencv-python 
 
-pandas 1.2.4
+pandas 
 
 numpy
 
