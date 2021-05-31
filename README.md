@@ -25,7 +25,7 @@ scipy
 ### User-guide ###
  
 The program can only be used by one person at a time.
-In order for this program to run, the user must have a working webcam. If you have a external webcam, please change variable  :  `webcamSource` in main.py, line 25, so that it refers to the external camera.
+In order for this program to run, the user must have a working webcam. If you have a external webcam, please change variable  :  `webcamSource` (main.py, line 25) away from 0 so that it refers to the external camera.
 
 Step 1: Clone this repository
 
